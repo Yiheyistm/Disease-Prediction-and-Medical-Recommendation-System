@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Disease Analysis - Health Care Center</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-image: url('static/bgCover.jpg');
+            background-size: cover;
+            background-position: center;
+            background-color: rgba(0, 0, 0, 0.15);
+            background-blend-mode: overlay;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            background-color: #17a2b8;
+            color: white;
+            border-radius: 10px 10px 0 0 !important;
+            padding: 15px 20px;
+            font-weight: 500;
+        }
+
+        .btn {
+            background-color: #17a2b8;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #138496;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-link {
+            color: #17a2b8;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            color: #138496;
+        }
+
+        .feature-importance {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .probability-badge {
+            background-color: #17a2b8;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9em;
+        }
+
+        .symptom-badge {
+            background-color: #6c757d;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            margin: 2px;
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: rgba(16, 4, 95, 0.9);">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-heartbeat"></i> Health Care Center
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/"><i class="fas fa-home"></i> Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/model_analysis"><i class="fas fa-chart-bar"></i> Model Analysis</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2 class="text-center mb-4">Disease Analysis Results</h2>
+
+        <!-- Predicted Disease -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-diagnosis"></i> Predicted Disease
+            </div>
+            <div class="card-body">
+                <h4 class="card-title">{{ predicted_disease }}</h4>
+                <p class="card-text">{{ description }}</p>
+            </div>
+        </div>
+
+        <!-- Symptoms -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-notes-medical"></i> Reported Symptoms
+            </div>
+            <div class="card-body">
+                {% for symptom in corrected_symptoms %}
+                <span class="symptom-badge">{{ symptom }}</span>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Top Predictions -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-chart-pie"></i> Probability Analysis
+            </div>
+            <div class="card-body">
+                <h5>Top 5 Probable Diseases:</h5>
+                <ul class="list-group">
+                    {% for disease, probability in top_predictions %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ disease }}
+                        <span class="probability-badge">{{ probability }}%</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- Feature Importance -->
+        {% if top_features %}
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-star"></i> Key Symptom Importance
+            </div>
+            <div class="card-body">
+                <div class="feature-importance">
+                    {% for feature, importance in top_features %}
+                    <div class="mb-2">
+                        <strong>{{ feature }}</strong>
+                        <div class="progress">
+                            <div class="progress-bar bg-info" role="progressbar" data-width="{{ importance * 100 }}"
+                                aria-valuenow="{{ importance * 100 }}" aria-valuemin="0" aria-valuemax="100">
+                                {{ "%.2f"|format(importance * 100) }}%
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Recommendations -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-clipboard-list"></i> Recommendations
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5><i class="fas fa-pills"></i> Medications</h5>
+                        <ul class="list-group">
+                            {% for med in medications %}
+                            <li class="list-group-item">{{ med }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h5><i class="fas fa-utensils"></i> Diet</h5>
+                        <ul class="list-group">
+                            {% for item in diet %}
+                            <li class="list-group-item">{{ item }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="/" class="btn btn-lg">
+                <i class="fas fa-arrow-left"></i> Back to Home
+            </a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.progress-bar').forEach(bar => {
+                bar.style.width = bar.dataset.width + '%';
+            });
+        });
+    </script>
+</body>
+
+</html>

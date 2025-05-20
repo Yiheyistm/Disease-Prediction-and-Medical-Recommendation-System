@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Model Analysis - Health Care Center</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-image: url('static/bgCover.jpg');
+            background-size: cover;
+            background-position: center;
+            background-color: rgba(0, 0, 0, 0.15);
+            background-blend-mode: overlay;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+            margin-bottom: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            background-color: #17a2b8;
+            color: white;
+            border-radius: 10px 10px 0 0 !important;
+            padding: 15px 20px;
+            font-weight: 500;
+        }
+
+        .btn {
+            background-color: #17a2b8;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #138496;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-link {
+            color: #17a2b8;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            color: #138496;
+        }
+
+        .plot-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .plot-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .metrics-table {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .metrics-table th {
+            background-color: #17a2b8;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: rgba(16, 4, 95, 0.9);">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-heartbeat"></i> Health Care Center
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/"><i class="fas fa-home"></i> Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/model_analysis"><i class="fas fa-chart-bar"></i> Model
+                            Analysis</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2 class="text-center mb-4">Model Performance Analysis</h2>
+
+        <!-- Model Accuracy Plot -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-chart-line"></i> Model Accuracy Comparison
+            </div>
+            <div class="card-body">
+                <div class="plot-container">
+                    <img src="data:image/png;base64,{{ accuracy_plot }}" alt="Model Accuracy Comparison">
+                </div>
+            </div>
+        </div>
+
+        <!-- Disease Distribution -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-chart-pie"></i> Disease Distribution
+            </div>
+            <div class="card-body">
+                <div class="plot-container">
+                    <img src="data:image/png;base64,{{ disease_plot }}" alt="Disease Distribution">
+                </div>
+            </div>
+        </div>
+
+        <!-- Symptom Distribution -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-chart-bar"></i> Symptom Distribution
+            </div>
+            <div class="card-body">
+                <div class="plot-container">
+                    <img src="data:image/png;base64,{{ symptom_plot }}" alt="Symptom Distribution">
+                </div>
+            </div>
+        </div>
+
+        <!-- Model Metrics -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-table"></i> Detailed Model Metrics
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered metrics-table">
+                        <thead>
+                            <tr>
+                                <th>Model</th>
+                                <th>Accuracy</th>
+                                <th>Precision</th>
+                                <th>Recall</th>
+                                <th>F1-Score</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for model_name, metrics in model_metrics.items() %}
+                            <tr>
+                                <td>{{ model_name }}</td>
+                                <td>{{ "%.2f"|format(metrics.accuracy * 100) }}%</td>
+                                <td>{{ "%.2f"|format(metrics.report['macro avg']['precision'] * 100) }}%</td>
+                                <td>{{ "%.2f"|format(metrics.report['macro avg']['recall'] * 100) }}%</td>
+                                <td>{{ "%.2f"|format(metrics.report['macro avg']['f1-score'] * 100) }}%</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="/" class="btn btn-lg">
+                <i class="fas fa-arrow-left"></i> Back to Home
+            </a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

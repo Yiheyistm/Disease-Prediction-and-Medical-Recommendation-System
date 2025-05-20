@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Health Care Center</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-image: url('static/bgCover.jpg');
+            background-size: cover;
+            background-position: center;
+            background-color: rgba(0, 0, 0, 0.15);
+            background-blend-mode: overlay;
+        }
+        .logo {
+            width: 100%;
+            height: 50px;
+            color: white;
+            margin-top: 0;
+            margin-bottom: 0;
+            margin-left: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .myimg {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+            padding: 5px;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 40px;
+        }
+        .title-symptoms {
+            color: black;
+            margin-bottom: 20px;
+            margin-left: 3px;
+        }
+        .message-text {
+            color: red;
+        }
+        .btn {
+            background-color: rgba(16, 4, 95, 0.7);
+            backdrop-filter: blur(5px);
+            border: none;
+            border-radius: 8px;
+            padding: 10px;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            background-color: rgba(16, 4, 95, 0.4);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .btn-info {
+            background-color: #17a2b8;
+            color: white;
+        }
+        .btn-info:hover {
+            background-color: #138496;
+            color: white;
+        }
+        .footer {
+            background-color: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            padding: 10px;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+        }
+        .analysis-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            padding: 12px 24px;
+        }
+        .analysis-btn i {
+            font-size: 1.1em;
+        }
+        /* Checkbox styling */
+        .form-check-input {
+            width: 1.2em;
+            height: 1.2em;
+            margin-top: 0.2em;
+            border: 2px solid #17a2b8;
+            cursor: pointer;
+        }
+        
+        .form-check-input:checked {
+            background-color: #17a2b8;
+            border-color: #17a2b8;
+        }
+        
+        .form-check-label {
+            cursor: pointer;
+            padding-left: 0.5em;
+            font-size: 0.95em;
+            color: #2c3e50;
+        }
+        
+        /* Results table styling */
+        .results-container {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin-top: 30px;
+        }
+        
+        .results-header {
+            color: #17a2b8;
+            font-size: 1.5em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #17a2b8;
+        }
+        
+        .results-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 8px;
+        }
+        
+        .results-table th {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            font-weight: 600;
+            padding: 12px 15px;
+            border-radius: 8px 0 0 8px;
+            width: 25%;
+        }
+        
+        .results-table td {
+            background-color: white;
+            padding: 12px 15px;
+            border-radius: 0 8px 8px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .results-table ul {
+            list-style-type: none;
+            padding-left: 0;
+            margin-bottom: 0;
+        }
+        
+        .results-table li {
+            padding: 5px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .results-table li:last-child {
+            border-bottom: none;
+        }
+        
+        /* Symptom badges */
+        .symptom-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            margin: 2px;
+            background-color: #e3f2fd;
+            color: #17a2b8;
+            border-radius: 15px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: rgba(16, 4, 95, 0.9);">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">
+            <i class="fas fa-heartbeat"></i> Health Care Center
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" href="/"><i class="fas fa-home"></i> Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/model_analysis"><i class="fas fa-chart-bar"></i> Model Analysis</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- main form of page -->
+<div class="container my-4 mt-4 bg-glass p-4 rounded">
+<form action="/predict" method="post" class="p-4 shadow rounded bg-white">
+    <!-- Text Input Field -->
+    <div class="form-group mb-4">
+        <label for="symptomsInput" class="form-label fw-bold text-primary fs-5">Type additional symptoms:</label>
+        <input type="text" class="form-control form-control-lg" id="symptomsInput" name="symptomsInput"
+            placeholder="e.g., fatigue, mild fever, acidity">
+        <small class="form-text text-muted">Separate symptoms using commas (,)</small>
+    </div>
+
+    <!-- Checkbox Symptom List -->
+    <div class="form-group mb-4">
+        <label class="form-label fw-bold text-success fs-5">Or select symptoms from the list:</label>
+        <div class="row">
+            {% for symptom in top_symptoms %}
+            <div class="col-sm-6 col-md-4 col-lg-3 mb-2">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="symptoms" value="{{ symptom }}"
+                        id="symptom_{{ loop.index }}">
+                    <label class="form-check-label" for="symptom_{{ loop.index }}">
+                        {{ symptom }}
+                    </label>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+<!-- Error/Feedback Message -->
+{% if message %}
+    <div class="alert alert-warning text-center fw-semibold">{{ message }}</div>
+    {% endif %}
+<!-- Submit Button -->
+<div class="d-flex justify-content-center">
+        <button type="submit" class="btn btn-primary btn-lg w-50">
+            Predict Disease
+        </button>
+        </div>
+        </form>
+
+</div>
+
+{% if predicted_disease %}
+<!-- Results -->
+<div class="results-container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="results-header">Predicted Results</h4>
+        <a href="{{ url_for('analysis') }}" class="btn btn-info analysis-btn">
+            <i class="fas fa-chart-line"></i> View Detailed Analysis
+        </a>
+    </div>
+
+    <div class="symptom-badges mb-4">
+        <h6 class="text-muted mb-2">Selected Symptoms:</h6>
+        {% for symptom in symptoms %}
+        <span class="symptom-badge">{{ symptom }}</span>
+        {% endfor %}
+    </div>
+
+    <table class="results-table">
+        <tbody>
+            <tr>
+                <th>Disease</th>
+                <td><strong>{{ predicted_disease }}</strong></td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ dis_des }}</td>
+            </tr>
+            <tr>
+                <th>Precautions</th>
+                <td>
+                    <ul>
+                        {% for i in my_precautions %}
+                            <li><i class="fas fa-shield-alt text-info me-2"></i>{{ i }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <th>Medications</th>
+                <td>
+                    <ul>
+                        {% for i in medications %}
+                            <li><i class="fas fa-pills text-info me-2"></i>{{ i }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <th>Workout</th>
+                <td>
+                    <ul>
+                        {% for i in workout %}
+                            <li><i class="fas fa-running text-info me-2"></i>{{ i }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <th>Diet</th>
+                <td>
+                    <ul>
+                        {% for i in my_diet %}
+                            <li><i class="fas fa-utensils text-info me-2"></i>{{ i }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endif %}
+{% if show_analysis_button %}
+<div class="text-center mt-3">
+    <a href="{{ url_for('analysis') }}" class="btn btn-info btn-lg">
+        View Detailed Analysis
+    </a>
+</div>
+{% endif %}
+</body>
+</html>
