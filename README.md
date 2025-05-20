@@ -2,6 +2,20 @@
 
 A machine learning-based web application that predicts diseases based on symptoms and provides medical recommendations including medications, diet plans, and workout suggestions.
 
+## Screenshots
+
+### Home Page
+![Home Page](screenshots/image1.png)
+
+### Disease Prediction Interface
+![Prediction Interface](screenshots/image2.png)
+
+### Analysis Results
+![Analysis Results](screenshots/image3.png)
+
+### Model Analysis Dashboard
+![Model Analysis](screenshots/image.png)
+
 ## Features
 
 - **Disease Prediction**: Predicts diseases based on user-reported symptoms using a Random Forest model
